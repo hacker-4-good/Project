@@ -28,6 +28,7 @@ wdFormatPDF = 17
 
 
 # option for user to select based upon service want to take
+st.title("Care4Doc")
 option = st.selectbox("Select the option: ",("Choose option","PDF","Text","JPG/JPEG"))
 
 
