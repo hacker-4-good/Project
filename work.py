@@ -22,7 +22,7 @@ import streamlit as st        # streamlit :- Design of interface for user intera
 import PyPDF2 as pdf          # PyPDF2 :- Used to extract text from pdf
 from textblob import TextBlob # TextBlob :- Used to correct and replace the wrong word
 import  pytesseract           # pytesseract :- Used to extract the text from image 
-
+pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 wdFormatPDF = 17
 
@@ -62,7 +62,6 @@ if(st.button("Submit")):
     
 
     if(option=="JPG/JPEG"):
-        pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
         # extracting of text from image and convert to string and store it in a variable name "string"
         string = pytesseract.image_to_string(path)
         # solving error words by passing complete "string" in TextBlob library object
