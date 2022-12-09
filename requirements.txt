@@ -1,0 +1,4 @@
+PyPDF2==2.11.2
+pytesseract==0.3.10
+streamlit==1.14.0
+textblob==0.17.1
