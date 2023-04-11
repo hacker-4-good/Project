@@ -21,8 +21,11 @@ can configure then and there
 import streamlit as st        # streamlit :- Design of interface for user interaction
 import PyPDF2 as pdf          # PyPDF2 :- Used to extract text from pdf
 from textblob import TextBlob # TextBlob :- Used to correct and replace the wrong word
-import  pytesseract           # pytesseract :- Used to extract the text from image 
-pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+import  pytesseract   
+from PIL import Image 
+import cv2 
+import numpy     # pytesseract :- Used to extract the text from image 
+pytesseract.pytesseract.tesseract_cmd = r'C:/Tesseract-OCR/tesseract.exe'
 
 wdFormatPDF = 17
 
@@ -45,7 +48,7 @@ if(st.button("Submit")):
 
     if(option=="PDF"):
         # Read of the text from file
-        PDF = pdf.PdfFileReader(file)
+        PDF = pdf.PdfReader(file)
         for i in range(PDF.numPages):
             # access to particular page and extract text and simultaneously rectify them
             res = TextBlob(PDF.getPage(i).extract_text()).correct()
@@ -63,7 +66,16 @@ if(st.button("Submit")):
 
     if(option=="JPG/JPEG"):
         # extracting of text from image and convert to string and store it in a variable name "string"
-        string = pytesseract.image_to_string(path)
+        pimage = Image.open(file)
+        st.image(pimage)
+        image = cv2.cvtColor(numpy.array(pimage), cv2.COLOR_RGB2BGR)
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        blur = cv2.GaussianBlur(gray, (3,3), 0)
+        thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)[1]
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
+        opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=1)
+        invert = 255 - opening
+        string = pytesseract.image_to_string(invert)
         # solving error words by passing complete "string" in TextBlob library object
         res = TextBlob(string).correct()
         st.text(res)
